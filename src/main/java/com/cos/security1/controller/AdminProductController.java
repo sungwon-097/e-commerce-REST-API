@@ -2,6 +2,7 @@ package com.cos.security1.controller;
 
 import com.cos.security1.model.Product;
 import com.cos.security1.repository.ProductRepository;
+import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -13,6 +14,7 @@ import java.util.Optional;
 @Controller
 @PreAuthorize("hasRole('ROLE_MANAGER') or hasRole('ROLE_ADMIN')")
 @RequestMapping("/admin/product")
+@Api(tags = "ROLE : Manager or Admin")
 public class AdminProductController {
 
     @Autowired
