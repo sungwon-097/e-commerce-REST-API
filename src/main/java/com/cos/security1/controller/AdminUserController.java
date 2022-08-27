@@ -6,6 +6,7 @@ import com.cos.security1.repository.UserRepository;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -16,10 +17,9 @@ import java.util.List;
 import java.util.Optional;
 
 @Controller
-//    @Secured("ROLE_ADMIN") // 단일 권한
-@PreAuthorize("hasRole('ROLE_MANAGER') or hasRole('ROLE_ADMIN')") // 두 개 이상의 권한
+@Secured("ROLE_ADMIN") // 단일 권한
 @RequestMapping("admin/user")
-@Api(tags = "ROLE : Manager or Admin")
+@Api(tags = "ROLE : Admin")
 public class AdminUserController {
 
     @Autowired
@@ -31,7 +31,7 @@ public class AdminUserController {
         return (List<User>) userRepository.findAll();
     }
 
-    @GetMapping("/userid/{id}")
+    @GetMapping("/userid={id}")
     @ApiOperation(value = "Find user by id")
     public @ResponseBody Optional<User> retrieveUserid(@PathVariable Long id){
         Optional<User> user = userRepository.findById(id);
@@ -41,7 +41,7 @@ public class AdminUserController {
         }
         return user;
     }
-    @GetMapping("/username/{username}")
+    @GetMapping("/username={username}")
     @ApiOperation(value = "Find user by username")
     public @ResponseBody Optional<User> retrieveUsername(@PathVariable String username){
         User user = userRepository.findByUsername(username);
@@ -51,7 +51,7 @@ public class AdminUserController {
         }
         return Optional.of(user);
     }
-    @GetMapping("/email/{email}")
+    @GetMapping("/email={email}")
     @ApiOperation(value = "Find user by email")
     public @ResponseBody Optional<User> retrieveEmail(@PathVariable String email){
         User user = userRepository.findByEmail(email);
@@ -61,7 +61,7 @@ public class AdminUserController {
         }
         return Optional.of(user);
     }
-    @GetMapping("/provider/{provider}")
+    @GetMapping("/provider={provider}")
     @ApiOperation(value = "Find user by social provider")
     public @ResponseBody
     Optional<List<User>> retrieveProvider(@PathVariable String provider){
@@ -72,7 +72,7 @@ public class AdminUserController {
         }
         return Optional.of(user);
     }
-    @GetMapping("/role/{role}")
+    @GetMapping("/role={role}")
     @ApiOperation(value = "Find user by role")
     public @ResponseBody Optional<List<User>> retrieveRole(@PathVariable String role){
         List<User> user = (List<User>) userRepository.findByRole(role);
@@ -82,11 +82,19 @@ public class AdminUserController {
         }
         return Optional.of(user);
     }
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/id={id}")
     @ApiOperation(value = "Delete user by id")
     public @ResponseBody Optional<List<User>> deleteUser(@PathVariable Long id){
         userRepository.deleteById(id);
         List<User> user = userRepository.findAll();
         return Optional.of(user);
+    }
+
+    @PatchMapping("/role/{role}/{username}")
+    public @ResponseBody String changeRole(@PathVariable String role, @PathVariable String username){
+        User user = userRepository.findByUsername(username);
+        user.setRole(role);
+        userRepository.save(user);
+        return "changed";
     }
 }

@@ -23,13 +23,11 @@ public class ProductController {
     public @ResponseBody List<Product> retrieveAllProducts(){
         return productRepository.findAll();
     }
-    @GetMapping("/name/{name}")
+
+    @GetMapping("/name={name}")
     public @ResponseBody Product retrieveProductsByName(@PathVariable String name){
-        return productRepository.findByName(name);
-    }
-    @GetMapping("/id/{id}")
-    public @ResponseBody
-    Optional<Product> retrieveProductsById(@PathVariable Long id){
-        return productRepository.findById(id);
+        Product product = productRepository.findByName(name);
+        product.setViews(product.getViews()+1);
+        return product;
     }
 }

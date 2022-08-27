@@ -32,7 +32,7 @@ public class AdminProductController {
             productEntity = Product.builder()
                     .beforePrice(beforePrice)
                     .price(price)
-                    .score(0)
+                    .views(0)
                     .description(description)
                     .name(name)
                     .build();
@@ -40,7 +40,21 @@ public class AdminProductController {
         }
         return "redirect:/product/";
     }
-    @DeleteMapping("/{id}")
+    @PatchMapping("/name={name}")
+    public String fixProducts(@PathVariable String name, Product product){
+        Product productEntity = productRepository.findByName(name);
+        if(productEntity == null){
+            productEntity = Product.builder()
+                    .beforePrice(product.getBeforePrice())
+                    .price(product.getPrice())
+                    .description(product.getDescription())
+                    .name(product.getName())
+                    .build();
+            productRepository.save(productEntity);
+        }
+        return "redirect:/product/";
+    }
+    @DeleteMapping("/id={id}")
     public @ResponseBody
     Optional<List<Product>> deleteProduct(@PathVariable Long id){
         productRepository.deleteById(id);
