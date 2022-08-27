@@ -17,7 +17,7 @@ public class Product {
     private Long id;
     private String name;
     private String description;
-    private Integer score;
+    private Integer views;
     private Integer price;
     private Integer beforePrice;
 
@@ -25,10 +25,10 @@ public class Product {
     private Timestamp submitDate;
 
     @Builder
-    public Product(Long id, String name, String description, Integer score, Integer price, Integer beforePrice, Timestamp submitDate) {
+    public Product(Long id, String name, String description, Integer views, Integer price, Integer beforePrice, Timestamp submitDate) {
         this.id = id;
         this.name = name;
-        this.score = score;
+        this.views = views;
         this.description = description;
         this.price = price;
         this.beforePrice = beforePrice;
